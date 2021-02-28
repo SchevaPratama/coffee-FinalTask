@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model
 {
-    protected $guarded = ['id'];
+    protected $primaryKey = 'id_comment';
+    protected $guarded = ['id_comment'];
     protected $table = 'comment';
     use HasFactory;
 }

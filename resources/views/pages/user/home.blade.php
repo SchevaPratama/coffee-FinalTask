@@ -163,6 +163,13 @@
                     <div class="col-sm-4">
                         <div
                             class="andro_product andro_product-minimal andro_product-has-controls andro_product-has-buttons">
+
+                            @if ($product->stock == 0)
+                                <div class="andro_product-badge andro_badge-sale">
+                                    Out Of Stock
+                                </div>
+                            @endif
+                            
                             <div class="andro_product-thumb">
                                 <a href="/detailProduct/{{$product->id}}"><img src="{{ asset('images/produk/'.$product->gambar) }}"
                                         alt="product"></a>

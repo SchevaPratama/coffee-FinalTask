@@ -36,6 +36,15 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Stock</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control @error('stock') is-invalid @enderror" id="stock" name="stock" value="{{$product->stock}}">
+                                            @error('stock')
+                                                <div class="invalid-feedback">{{$message}}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
                                         <label class="col-sm-2 col-form-label">Deskripsi</label>
                                         <div class="col-sm-10">
                                             <textarea class="form-control" rows="4" cols="3" id="deskripsi" name="deskripsi">{{$product->deskripsi}}</textarea>

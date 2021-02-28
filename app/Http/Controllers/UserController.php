@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Comment;
 use App\Models\User;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -35,10 +35,13 @@ class UserController extends Controller
 
     public function show(Product $product)
     {
+        $feedbacks = Comment::where('product_id',$product->id)->get();
+        $totalFeedbacks = $feedbacks->count();
         $user = User::where('id',1)->first(); 
         $products = Product::where('id', '!=' , $product->id)
                 ->get();
-        return view('pages.user.detailProduk',['products' => $products,'product' => $product,'user' => $user]);
+        return view('pages.user.detailProduk',['products' => $products,'product' => $product,'user' => $user,
+        'feedbacks' => $feedbacks,'totalFeedbacks' => $totalFeedbacks]);
     }
 
     public function about()

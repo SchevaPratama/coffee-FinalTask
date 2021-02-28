@@ -86,6 +86,8 @@
 											<th>Nama Barang</th>
 											<th>Harga</th>
 											<th>Tanggal Pembelian</th>
+											<th>Status</th>
+											<th>Aksi</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -95,6 +97,22 @@
 											<td>{{$jual->nama}}</td>
 											<td>{{$jual->harga}}</td>
 											<td>{{$jual->tanggal_transaksi}}</td>
+                                            @if ($jual->status == 1)
+                                                <td>Berhasil</td>
+                                            @else
+                                                <td>Gagal</td>
+                                            @endif
+											<td>
+                                                <form action="/admin/updatepenjualan/{{$jual->id_transaksi}}" method="post" enctype="multipart/form-data">
+                                                @method('patch')
+                                                @csrf
+                                                    <div class="form-group row">
+                                                        <div class="col-sm-12 ml-3 mt-3">
+                                                            <button type="submit" class="btn btn-success px-4">Update</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </td>
 										</tr>
                                         @endforeach
 									</tbody>
@@ -104,6 +122,8 @@
 											<th>Nama Barang</th>
 											<th>Harga</th>
 											<th>Tanggal Pembelian</th>
+											<th>Status</th>
+											<th>Aksi</th>
 										</tr>
 									</tfoot>
 								</table>

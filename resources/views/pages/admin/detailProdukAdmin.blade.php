@@ -19,6 +19,7 @@
                             <p class="text-justify">{{$product->deskripsi}}</p> 
                         </div>
                         <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><b>Stock: {{$product->stock}}</b></li>
                             <li class="list-group-item"><b>Terjual: {{$product->terjual}}</b></li>
                         </ul>
                         <div class="card-body"> 

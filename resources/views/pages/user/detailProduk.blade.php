@@ -40,10 +40,31 @@
 
             <form class="andro_product-atc-form mt-3">
               <div class="qty-outter">
-                <a href="/order/{{$product->id}}" target="_blank" class="andro_btn-custom your-link ">Buy Now</a>
+                @if ($product->stock > 0)
+                  <a href="/order/{{$product->id}}" target="_blank" class="andro_btn-custom your-link ">Buy Now</a>
+                @else
+                  <button class="andro_btn-custom your-link" disabled="disabled">Buy Now</button>
+                  {{-- <a href="" target="_blank" class="andro_btn-custom your-link " disabled>Buy Now</a> --}}
+                @endif
+                
               </div>
 
             </form>
+
+            <ul class="andro_product-meta">
+              <li>
+                <span>Terjual: </span>
+                <div class="andro_product-meta-item">
+                  <a href="#">{{$product->terjual}}</a>
+                </div>
+              </li>
+              <li>
+                <span>stock: </span>
+                <div class="andro_product-meta-item">
+                  <a href="#">{{$product->stock}}</a>
+                </div>
+              </li>
+            </ul>
           </div>
 
         </div>
@@ -64,6 +85,9 @@
               <li class="nav-item">
                 <a class="nav-link active" id="tab-product-desc-tab" data-toggle="pill" href="#tab-product-desc" role="tab" aria-controls="tab-product-desc" aria-selected="true">Description</a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link" id="tab-product-reviews-tab" data-toggle="pill" href="#tab-product-reviews" role="tab" aria-controls="tab-product-reviews" aria-selected="false">Reviews ({{$totalFeedbacks}})</a>
+              </li>
             </ul>
           </div>
 
@@ -72,6 +96,46 @@
               <div class="tab-pane fade show active" id="tab-product-desc" role="tabpanel" aria-labelledby="tab-product-desc-tab">
                 <h4>Description</h4>
                 {{$product->deskripsi}}
+              </div>
+
+              <div class="tab-pane fade" id="tab-product-reviews" role="tabpanel" aria-labelledby="tab-product-reviews-tab">
+                <h4>Leave a Review</h4>
+
+                <!-- Review Form start -->
+                <div class="comment-form">
+                  <form action="/admin/feedbackProduct" method="post">
+                    @csrf
+                    <div class="row">
+                        <input type="hidden" name="product_id" value="{{$product->id}}">
+                        <div class="form-group col-lg-12">
+                            <input type="text" placeholder="Your Name" class="form-control" name="name" value="">
+                        </div>
+                        <div class="form-group col-lg-12">
+                            <textarea name="comment" class="form-control" placeholder="Type your message"
+                                rows="8"></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="andro_btn-custom primary">Send Message</button>
+                </form>
+                </div>
+                <!-- Review Form End -->
+
+                <!-- Reviews Start -->
+                <div class="comments-list">
+                  <ul>
+                    @foreach ($feedbacks as $feedback)
+                    <li class="comment-item">
+                      <div class="comment-body">
+                        <h5>{{$feedback->name}}</h5>
+                        <span>Posted on: {{$feedback->time}}</span>
+                        <p>{{$feedback->comment}}.</p>
+                      </div>
+                    </li>
+                    @endforeach
+                  </ul>
+                </div>
+                <!-- Reviews End -->
+
               </div>
             </div>
           </div>

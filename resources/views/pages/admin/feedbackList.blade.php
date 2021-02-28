@@ -46,7 +46,6 @@
                         <div class="dropdown-divider mb-0"></div>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-
                             <x-jet-dropdown-link href="{{ route('logout') }}"
                                      onclick="event.preventDefault();
                                             this.closest('form').submit();">
@@ -59,6 +58,7 @@
         </div>
     </nav>
 </header>
+
 <!--end header-->
 <div class="page-wrapper">
     <!--page-content-wrapper-->
@@ -75,6 +75,28 @@
                         <div class="card-header has-arrow">{{$comment->name}}</div>
                         <div class="card-body">
                             <p class="card-text">{{$comment->comment}}.</p>
+                            <form action="/admin/feedback/{{$comment->id_comment}}" method="post" class="d-inline">
+                                @method('delete')
+                                @csrf
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Delete This Item?');">Hapus</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+
+                @foreach ($commentsProduct as $commentProduct)
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header has-arrow">{{$commentProduct->name}} (<b>{{$commentProduct->nama}}</b>)</div>
+                        <div class="card-body">
+                            <p class="card-text">{{$commentProduct->comment}}.</p>
+                            <p class="card-text"><b>Nama Produk: {{$commentProduct->nama}}</b></p>
+                            <form action="/admin/feedback/{{$commentProduct->id_comment}}" method="post" class="d-inline">
+                                @method('delete')
+                                @csrf
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Delete This Item?');">Hapus</button>
+                            </form>
                         </div>
                     </div>
                 </div>

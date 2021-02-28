@@ -7,7 +7,7 @@ use App\Models\Comment;
 use App\Models\Bulan;
 use App\Models\User;
 use Illuminate\Http\Request;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
@@ -89,8 +89,15 @@ class AdminController extends Controller
 
     public function showFeedback()
     {
-        $comments = Comment::all();
-        return view('pages.admin.feedbackList',compact('comments'));
+        $commentsProduct = DB::table('comment')
+                    ->join('products', 'comment.product_id', '=', 'products.id')
+                    ->select('comment.*', 'products.*')
+                    ->get();
+
+        $comments = DB::table('comment')
+                    ->where('product_id', 'NULL')
+                    ->get();
+        return view('pages.admin.feedbackList',compact('comments','commentsProduct'));
     }
 
     /**
@@ -141,7 +148,25 @@ class AdminController extends Controller
         Comment::create([
             'name' => $request->name,
             'comment' => $request->comment,
-            'time' => date('Y-m-d H:i:s'),
+            'time' => date('j F Y'),
+        ]);
+        return redirect('/');
+    }
+
+    public function feedbackProduct(Request $request)
+    {
+        // dd($request->all());
+        // $request->validate([
+        //     'nama' => 'required',
+        //     'harga' => 'required'
+        //     ]);
+        $user = User::where('id',1)->first(); 
+        $products = Product::all();
+        Comment::create([
+            'product_id' => $request->product_id,
+            'name' => $request->name,
+            'comment' => $request->comment,
+            'time' => date('j F Y'),
         ]);
         return redirect('/');
     }
@@ -180,18 +205,23 @@ class AdminController extends Controller
         // dd($request->all());
         $request->validate([
             'nama' => 'required',
-            'harga' => 'required'
+            'harga' => 'required',
+            'stock' => 'required',
         ]);
         Product::where('id',$product->id)
                 ->update([
                     'nama' => $request->nama,
                     'harga' => $request->harga,
-                    'deskripsi' => $request->deskripsi,
-                    'gambar' => $request->file('gambar')->getClientOriginalName(),
+                    'stock' => $request->stock,
+                    'deskripsi' => $request->deskripsi
                 ]);
         if($request->hasFile('gambar')){
             $request->file('gambar')->move('images/produk/',$request->file('gambar')->getClientOriginalName());
-            $product->gambar = $request->file('gambar')->getClientOriginalName();
+            Product::where('id',$product->id)
+                ->update([
+                    'gambar' => $request->file('gambar')->getClientOriginalName(),
+                ]);
+            // $product->gambar = $request->file('gambar')->getClientOriginalName();
         }
         return redirect('/admin/products')->with('status','Produk Berhasil Diubah');
     }
@@ -202,6 +232,7 @@ class AdminController extends Controller
         $user = User::where('id',1)->first();
         Product::where('id',$product->id)
                 ->update([
+                    'stock' => DB::raw('stock - 1'),
                     'terjual' => DB::raw('terjual + 1'),
         ]);
         DB::table('penjualan')->insert([
@@ -209,6 +240,7 @@ class AdminController extends Controller
             'tanggal_transaksi' => date('Y-m-d'),
             'bulan' => date('F'),
             'tahun' => date('Y'),
+            'status' => 0,
         ]);
         return redirect('https://api.whatsapp.com/send?phone='.$user->telp);
     }
@@ -223,5 +255,11 @@ class AdminController extends Controller
     {
         Product::destroy($product->id);
         return redirect('/admin/products')->with('status','Produk Berhasil Dihapus');
+    }
+
+    public function deleteFeedback(Comment $comment)
+    {
+        Comment::destroy($comment->id_comment);
+        return redirect('/feedbacks')->with('status','Feedback Berhasil Dihapus');
     }
 }

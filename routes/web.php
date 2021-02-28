@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PenjualanController;
 
 
 /*
@@ -28,24 +29,30 @@ Route::get('/contactus', [UserController::class, 'contact']);
 
 // Admin
 // Route::get('/admin', [AdminController::class, 'index'])->name('admin');
-Route::middleware(['auth:sanctum', 'verified'])->get('/admin', [AdminController::class, 'index'])->name('admin');
+Route::group(['middleware' => ['auth']],function(){
+    Route::get('/admin', [AdminController::class, 'index']);
+    Route::get('/admin/products', [AdminController::class, 'products']);
+    Route::get('/admin/products/search', [AdminController::class, 'searchProducts']);
+    Route::get('/products/search', [UserController::class, 'searchProducts']);
+    Route::get('/admin/penjualan/{bulan}', [AdminController::class, 'detailPenjualan']);
+    Route::get('/admin/penjualan', [AdminController::class, 'penjualan']);
+    Route::patch('/admin/updatepenjualan/{penjualan}', [PenjualanController::class, 'update']);
+    Route::get('/admin/penjualan/{bulan}/search', [AdminController::class, 'searchPenjualan']);
+    Route::get('/admin/products/tambah',[AdminController::class, 'create']);
+    Route::get('/admin/products/{product}', [AdminController::class, 'show']);
+    Route::post('/admin/products', [AdminController::class, 'store']);
+    Route::delete('/admin/products/{product}', [AdminController::class, 'destroy']);
+    Route::delete('/admin/feedback/{comment}', [AdminController::class, 'deleteFeedback']);
+    Route::get('/admin/products/{product}/edit', [AdminController::class, 'edit']);
+    Route::patch('/admin/products/{product}', [AdminController::class, 'update']);
+    Route::get('/order/{product}', [AdminController::class, 'sell']);
+    Route::post('/admin/feedback', [AdminController::class, 'feedback']);
+    Route::post('/admin/feedbackProduct', [AdminController::class, 'feedbackProduct']);
+    Route::get('/feedbacks', [AdminController::class, 'showFeedback']);
+    Route::get('/feedbacks/search', [AdminController::class, 'searchFeedback']);
+});
+// Route::middleware(['auth:sanctum', 'verified'])->get('/admin', [AdminController::class, 'index'])->name('admin');
 
-Route::get('/admin/products', [AdminController::class, 'products']);
-Route::get('/admin/products/search', [AdminController::class, 'searchProducts']);
-Route::get('/products/search', [UserController::class, 'searchProducts']);
-Route::get('/admin/penjualan', [AdminController::class, 'penjualan']);
-Route::get('/admin/penjualan/{bulan}/search', [AdminController::class, 'searchPenjualan']);
-Route::get('/admin/products/tambah',[AdminController::class, 'create']);
-Route::get('/admin/products/{product}', [AdminController::class, 'show']);
-Route::post('/admin/products', [AdminController::class, 'store']);
-Route::delete('/admin/products/{product}', [AdminController::class, 'destroy']);
-Route::get('/admin/products/{product}/edit', [AdminController::class, 'edit']);
-Route::patch('/admin/products/{product}', [AdminController::class, 'update']);
-Route::get('/order/{product}', [AdminController::class, 'sell']);
-Route::post('/admin/feedback', [AdminController::class, 'feedback']);
-Route::get('/feedbacks', [AdminController::class, 'showFeedback']);
-Route::get('/feedbacks/search', [AdminController::class, 'searchFeedback']);
-Route::get('/admin/penjualan/{bulan}', [AdminController::class, 'detailPenjualan']);
 
 // Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 //     return view('dashboard');

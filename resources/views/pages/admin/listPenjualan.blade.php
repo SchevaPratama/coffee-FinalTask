@@ -71,6 +71,18 @@
             <div class="page-breadcrumb d-none d-md-flex align-items-center mb-3">
                 <div class="breadcrumb-title pr-3">Penjualan</div>
             </div>
+            @if (session('status'))
+            <div class="row">
+                <div class="col-lg-10 col-xl-10">
+                    <div class="alert bg-primary text-white alert-dismissible fade show" role="alert">
+                        {{session('status')}}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span
+                                aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            @endif
             <!--end breadcrumb-->
             <div class="row">
                 <div class="col-12 col-lg-10 col-xl-10">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
 use App\Models\Comment;
 use App\Models\Bulan;
@@ -11,6 +12,16 @@ use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
+    public function pageAuth()
+    {
+        // dd(Auth::user()->is_admin);
+        $role = Auth::user()->is_admin;
+        if ($role == 1) {
+            return redirect('/admin');
+        } else {
+            return redirect('/');
+        }
+    }
     /**
      * Display a listing of the resource.
      *
@@ -18,60 +29,68 @@ class AdminController extends Controller
      */
     public function index()
     {
-        $totalProduk = Product::all()->count();
-        $totalTerjual = Product::sum('terjual');
-        $totalFeedback = Comment::all()->count();
-        return view('pages.admin.home',compact('totalProduk','totalTerjual','totalFeedback'));
+        if (Auth::user()->is_admin == 1) {
+            $totalProduk = Product::all()->count();
+            $totalTerjual = Product::sum('terjual');
+            $totalFeedback = Comment::all()->count();
+            return view('pages.admin.home', compact('totalProduk', 'totalTerjual', 'totalFeedback'));
+        } else {
+            return redirect('/');
+        }
+        // $totalProduk = Product::all()->count();
+        // $totalTerjual = Product::sum('terjual');
+        // $totalFeedback = Comment::all()->count();
+        // return view('pages.admin.home',compact('totalProduk','totalTerjual','totalFeedback'));
     }
 
     public function searchProducts(Request $request)
-	{
-		$search = $request->search;
- 
-		$products = DB::table('products')
-		->where('nama','like',"%".$search."%")
-		->paginate();
- 
-        return view('pages.admin.listProduk',compact('products'));
-	}
+    {
+        $search = $request->search;
 
-    public function searchPenjualan(Request $request,Bulan $bulan)
-	{
-		$search = $request->search;
- 
-		$penjualan = DB::table('penjualan')
-                    ->join('products', 'penjualan.id_barang', '=', 'products.id')
-                    ->select('penjualan.*', 'products.*')
-                    ->where('bulan',$bulan->nama_bulan)
-                    ->where('tanggal_transaksi','like',"%".$search."%")
-                    ->paginate();
+        $products = DB::table('products')
+            ->where('nama', 'like', "%" . $search . "%")
+            ->get();
+
+        return view('pages.admin.listProduk', compact('products'));
+    }
+
+    public function searchPenjualan(Request $request, Bulan $bulan)
+    {
+        $search = $request->search;
+
+        $penjualan = DB::table('penjualan')
+            ->join('products', 'penjualan.id_barang', '=', 'products.id')
+            ->select('penjualan.*', 'products.*')
+            ->where('bulan', $bulan->nama_bulan)
+            ->where('tanggal_transaksi', 'like', "%" . $search . "%")
+            ->get();
 
         $dataBulan = $bulan;
-        return view('pages.admin.detailPenjualan',compact('penjualan','dataBulan'));
-	}
+        return view('pages.admin.detailPenjualan', compact('penjualan', 'dataBulan'));
+    }
 
     public function searchFeedback(Request $request)
-	{
-		$search = $request->search;
- 
-		$comments = DB::table('comment')
-		->where('name','like',"%".$search."%")
-		->paginate();
- 
-        return view('pages.admin.feedbackList',compact('comments'));
-	}
+    {
+        $search = $request->search;
+
+        $comments = DB::table('comment')
+            ->where('name', 'like', "%" . $search . "%")
+            ->get();
+
+        return view('pages.admin.feedbackList', compact('comments'));
+    }
 
     public function products()
     {
         $products = Product::all();
-        return view('pages.admin.listProduk',compact('products'));
+        return view('pages.admin.listProduk', compact('products'));
     }
 
     public function penjualan()
     {
         $bulan = DB::table('bulan')->get();
         $penjualan = DB::table('penjualan')->get();
-        return view('pages.admin.listPenjualan',compact('penjualan','bulan'));
+        return view('pages.admin.listPenjualan', compact('penjualan', 'bulan'));
     }
 
     public function detailPenjualan(Bulan $bulan)
@@ -79,25 +98,35 @@ class AdminController extends Controller
         // echo $bulan->nama_bulan;
         // $bulan = DB::table('bulan')->get();
         $penjualan = DB::table('penjualan')
-                    ->join('products', 'penjualan.id_barang', '=', 'products.id')
-                    ->select('penjualan.*', 'products.*')
-                    ->where('bulan',$bulan->nama_bulan)
-                    ->get();
+            ->join('products', 'penjualan.id_barang', '=', 'products.id')
+            ->select('penjualan.*', 'products.*')
+            ->where('bulan', $bulan->nama_bulan)
+            ->get();
         $dataBulan = $bulan;
-        return view('pages.admin.detailPenjualan',compact('penjualan','dataBulan'));
+        return view('pages.admin.detailPenjualan', compact('penjualan', 'dataBulan'));
+    }
+
+    public function listUser(User $user)
+    {
+        // echo $bulan->nama_bulan;
+        // $bulan = DB::table('bulan')->get();
+        $users = DB::table('users')
+            ->where('is_admin', 0)
+            ->get();
+        return view('pages.admin.listUser', compact('users'));
     }
 
     public function showFeedback()
     {
         $commentsProduct = DB::table('comment')
-                    ->join('products', 'comment.product_id', '=', 'products.id')
-                    ->select('comment.*', 'products.*')
-                    ->get();
+            ->join('products', 'comment.product_id', '=', 'products.id')
+            ->select('comment.*', 'products.*')
+            ->get();
 
         $comments = DB::table('comment')
-                    ->where('product_id', 'NULL')
-                    ->get();
-        return view('pages.admin.feedbackList',compact('comments','commentsProduct'));
+            ->where('product_id', 'NULL')
+            ->get();
+        return view('pages.admin.feedbackList', compact('comments', 'commentsProduct'));
     }
 
     /**
@@ -121,19 +150,22 @@ class AdminController extends Controller
         // dd($request->all());
         $request->validate([
             'nama' => 'required',
-            'harga' => 'required'
-            ]);
+            'harga' => 'required',
+            'stock' => 'required',
+            'deskripsi' => 'required',
+        ]);
         Product::create([
-            'nama' => $request->nama,
-            'harga' => $request->harga,
-            'deskripsi' => $request->deskripsi,
+            'nama' => htmlspecialchars_decode($request->nama),
+            'harga' => htmlspecialchars_decode($request->harga),
+            'stock' => htmlspecialchars_decode($request->stock),
+            'deskripsi' => htmlspecialchars_decode($request->deskripsi),
             'gambar' => $request->file('gambar')->getClientOriginalName(),
         ]);
 
-        if($request->hasFile('gambar')){
-            $request->file('gambar')->move('images/produk/',$request->file('gambar')->getClientOriginalName());
+        if ($request->hasFile('gambar')) {
+            $request->file('gambar')->move('images/produk/', $request->file('gambar')->getClientOriginalName());
         }
-        return redirect('/admin/products')->with('status','Produk Berhasil Ditambahkan');
+        return redirect('/admin/products')->with('status', 'Produk Berhasil Ditambahkan');
     }
 
     public function feedback(Request $request)
@@ -143,11 +175,11 @@ class AdminController extends Controller
         //     'nama' => 'required',
         //     'harga' => 'required'
         //     ]);
-        $user = User::where('id',1)->first(); 
+        $user = User::where('id', 1)->first();
         $products = Product::all();
         Comment::create([
-            'name' => $request->name,
-            'comment' => $request->comment,
+            'name' => htmlspecialchars_decode($request->name),
+            'comment' => htmlspecialchars_decode($request->comment),
             'time' => date('j F Y'),
         ]);
         return redirect('/');
@@ -160,12 +192,12 @@ class AdminController extends Controller
         //     'nama' => 'required',
         //     'harga' => 'required'
         //     ]);
-        $user = User::where('id',1)->first(); 
+        $user = User::where('id', 1)->first();
         $products = Product::all();
         Comment::create([
             'product_id' => $request->product_id,
-            'name' => $request->name,
-            'comment' => $request->comment,
+            'name' => htmlspecialchars_decode($request->name),
+            'comment' => htmlspecialchars_decode($request->comment),
             'time' => date('j F Y'),
         ]);
         return redirect('/');
@@ -179,7 +211,7 @@ class AdminController extends Controller
      */
     public function show(Product $product)
     {
-        return view('pages.admin.detailProdukAdmin',compact('product'));
+        return view('pages.admin.detailProdukAdmin', compact('product'));
     }
 
     /**
@@ -190,7 +222,7 @@ class AdminController extends Controller
      */
     public function edit(Product $product)
     {
-        return view('pages.admin.editProduk',compact('product'));
+        return view('pages.admin.editProduk', compact('product'));
     }
 
     /**
@@ -207,34 +239,35 @@ class AdminController extends Controller
             'nama' => 'required',
             'harga' => 'required',
             'stock' => 'required',
+            'deskripsi' => 'required',
         ]);
-        Product::where('id',$product->id)
-                ->update([
-                    'nama' => $request->nama,
-                    'harga' => $request->harga,
-                    'stock' => $request->stock,
-                    'deskripsi' => $request->deskripsi
-                ]);
-        if($request->hasFile('gambar')){
-            $request->file('gambar')->move('images/produk/',$request->file('gambar')->getClientOriginalName());
-            Product::where('id',$product->id)
+        Product::where('id', $product->id)
+            ->update([
+                'nama' => htmlspecialchars_decode($request->nama),
+                'harga' => htmlspecialchars_decode($request->harga),
+                'stock' => htmlspecialchars_decode($request->stock),
+                'deskripsi' => htmlspecialchars_decode($request->deskripsi)
+            ]);
+        if ($request->hasFile('gambar')) {
+            $request->file('gambar')->move('images/produk/', $request->file('gambar')->getClientOriginalName());
+            Product::where('id', $product->id)
                 ->update([
                     'gambar' => $request->file('gambar')->getClientOriginalName(),
                 ]);
             // $product->gambar = $request->file('gambar')->getClientOriginalName();
         }
-        return redirect('/admin/products')->with('status','Produk Berhasil Diubah');
+        return redirect('/admin/products')->with('status', 'Produk Berhasil Diubah');
     }
 
     public function sell(Request $request, Product $product)
     {
         // dd($request->all());
-        $user = User::where('id',1)->first();
-        Product::where('id',$product->id)
-                ->update([
-                    'stock' => DB::raw('stock - 1'),
-                    'terjual' => DB::raw('terjual + 1'),
-        ]);
+        $user = User::where('id', 1)->first();
+        Product::where('id', $product->id)
+            ->update([
+                'stock' => DB::raw('stock - 1'),
+                'terjual' => DB::raw('terjual + 1'),
+            ]);
         DB::table('penjualan')->insert([
             'id_barang' => $product->id,
             'tanggal_transaksi' => date('Y-m-d'),
@@ -242,7 +275,7 @@ class AdminController extends Controller
             'tahun' => date('Y'),
             'status' => 0,
         ]);
-        return redirect('https://api.whatsapp.com/send?phone='.$user->telp);
+        return redirect('https://api.whatsapp.com/send?phone=' . $user->telp);
     }
 
     /**
@@ -254,12 +287,12 @@ class AdminController extends Controller
     public function destroy(Product $product)
     {
         Product::destroy($product->id);
-        return redirect('/admin/products')->with('status','Produk Berhasil Dihapus');
+        return redirect('/admin/products')->with('status', 'Produk Berhasil Dihapus');
     }
 
     public function deleteFeedback(Comment $comment)
     {
         Comment::destroy($comment->id_comment);
-        return redirect('/feedbacks')->with('status','Feedback Berhasil Dihapus');
+        return redirect('/feedbacks')->with('status', 'Feedback Berhasil Dihapus');
     }
 }

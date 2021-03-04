@@ -28,8 +28,17 @@
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label">Harga</label>
                                         <div class="col-sm-10">
-                                            <input type="text" class="form-control @error('harga') is-invalid @enderror" id="harga" name="harga" value="{{old('harga')}}">
+                                            <input type="number" class="form-control @error('harga') is-invalid @enderror" id="harga" name="harga" value="{{old('harga')}}">
                                             @error('harga')
+                                                <div class="invalid-feedback">{{$message}}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Stock</label>
+                                        <div class="col-sm-10">
+                                            <input type="number" class="form-control @error('stock') is-invalid @enderror" id="stock" name="stock" value="{{old('stock')}}">
+                                            @error('stock')
                                                 <div class="invalid-feedback">{{$message}}</div>
                                             @enderror
                                         </div>

@@ -35,7 +35,9 @@ class UserController extends Controller
 
     public function show(Product $product)
     {
-        $feedbacks = Comment::where('product_id',$product->id)->get();
+        $feedbacks = Comment::where('product_id',$product->id)
+                    ->where('comment_status',1)
+                    ->get();
         $totalFeedbacks = $feedbacks->count();
         $user = User::where('id',1)->first(); 
         $products = Product::where('id', '!=' , $product->id)
@@ -46,7 +48,10 @@ class UserController extends Controller
 
     public function about()
     {
-        $feedbacks = Comment::all()->random(3);
+        $feedbacks = Comment::where('comment_status',1)
+                    ->where('product_id',0)
+                    ->take(3)
+                    ->get();
         $user = User::where('id',1)->first(); 
         return view('pages.user.aboutUs',['user' => $user,'feedbacks' => $feedbacks]);
     }

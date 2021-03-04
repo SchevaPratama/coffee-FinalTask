@@ -180,7 +180,7 @@
                             </div>
                             <div class="andro_product-footer">
                                 <div class="andro_product-price">
-                                    <span>{{$product->harga}}</span>
+                                    <span>Rp.{{$product->harga}}</span>
                                 </div>
                                 <div class="andro_product-buttons">
                                     <a href="/detailProduct/{{$product->id}}" class="andro_btn-custom primary">Buy

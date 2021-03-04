@@ -8,7 +8,7 @@
             <a href="javascript:;" class="toggle-btn"> <i class="bx bx-menu"></i>
             </a>
         </div>
-        <div class="flex-grow-1 search-bar">
+        {{-- <div class="flex-grow-1 search-bar">
             <form action="/admin/penjualan/{{$dataBulan->id}}/search" method="GET" class="form-inline">
                 <div class="input-group">
                     <input type="hidden" name="bulan" value="{{$dataBulan->nama_bulan}}">
@@ -19,7 +19,7 @@
                     </div> 
                 </div>
             </form>
-        </div>
+        </div> --}}
         <div class="right-topbar ml-auto">
             <ul class="navbar-nav">
                 <li class="nav-item search-btn-mobile">
@@ -68,7 +68,7 @@
         <div class="page-content">
             <!--breadcrumb-->
             <div class="page-breadcrumb d-none d-md-flex align-items-center mb-3">
-                <div class="breadcrumb-title pr-3">Penjualan</div>
+                <div class="breadcrumb-title pr-3">User</div>
             </div>
             <!--end breadcrumb-->
             @if (session('status'))
@@ -84,11 +84,11 @@
             </div>
             @endif
             <div class="row">
-                <div class="col-12 col-lg-12 col-xl-12">
+                <div class="col-10 col-lg-10 col-xl-10">
                     <div class="card">
 						<div class="card-body">
 							<div class="card-title">
-								<h4 class="mb-0">{{$dataBulan->nama_bulan}}</h4>
+								<h4 class="mb-0">Data User</h4>
 							</div>
 							<hr/>
 							<div class="table-responsive">
@@ -96,75 +96,24 @@
 									<thead>
 										<tr>
 											<th>No</th>
-											<th>Nama Barang</th>
-											<th>Harga</th>
-											<th>Jumlah Barang</th>
-											<th>Total</th>
-											<th>Tanggal Pembelian</th>
-											<th>Status</th>
-											<th>Verifikasi</th>
+											<th>Nama User</th>
+											<th>Email</th>
 										</tr>
 									</thead>
 									<tbody>
-                                        @foreach ($penjualan as $jual)
+                                        @foreach ($users as $user)
 										<tr>
 											<td>{{$loop->iteration}}</td>
-											<td>{{$jual->nama}}</td>
-											<td>Rp.{{$jual->harga}}</td>
-											<td>{{$jual->jumlah_barang}}</td>
-											<td>Rp.{{$jual->total_harga}}</td>
-											<td>{{$jual->tanggal_transaksi}}</td>
-                                            @if ($jual->status == 1)
-                                                <td>Berhasil</td>
-                                                <td>
-                                                    <form action="/admin/updatepenjualan/{{$jual->id_transaksi}}" method="post" enctype="multipart/form-data">
-                                                    @method('patch')
-                                                    @csrf
-                                                        <div class="form-group row">
-                                                            <div class="col-sm-12 ml-3 mt-2">
-                                                                <button type="submit" disabled class="btn btn-success px-4">Verifikasi</button>
-                                                            </div>
-                                                        </div>
-                                                    </form>
-                                                </td>
-                                            @else
-                                                <td>Gagal</td>
-                                                <td>
-                                                    <form action="/admin/updatepenjualan/{{$jual->id_transaksi}}" method="post" enctype="multipart/form-data">
-                                                    @method('patch')
-                                                    @csrf
-                                                        <div class="form-group row">
-                                                            <div class="col-sm-12 ml-3 mt-2">
-                                                                <button type="submit" class="btn btn-success px-4">Verifikasi</button>
-                                                            </div>
-                                                        </div>
-                                                    </form>
-                                                </td>
-                                            @endif
-											{{-- <td>
-                                                <form action="/admin/updatepenjualan/{{$jual->id_transaksi}}" method="post" enctype="multipart/form-data">
-                                                @method('patch')
-                                                @csrf
-                                                    <div class="form-group row">
-                                                        <div class="col-sm-12 ml-3 mt-2">
-                                                            <button type="submit" class="btn btn-success px-4">Verifikasi</button>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </td> --}}
+											<td>{{$user->name}}</td>
+											<td>{{$user->email}}</td>
 										</tr>
                                         @endforeach
 									</tbody>
 									<tfoot>
 										<tr>
 											<th>No</th>
-											<th>Nama Barang</th>
-											<th>Harga</th>
-											<th>Jumlah Barang</th>
-											<th>Total</th>
-											<th>Tanggal Pembelian</th>
-											<th>Status</th>
-											<th>Verifikasi</th>
+											<th>Nama User</th>
+											<th>Email</th>
 										</tr>
 									</tfoot>
 								</table>

@@ -68,6 +68,18 @@
             <div class="page-breadcrumb d-none d-md-flex align-items-center mb-3">
                 <div class="breadcrumb-title pr-3">Feedback</div>
             </div>
+            @if (session('status'))
+            <div class="row">
+                <div class="col-lg-12 col-xl-12">
+                    <div class="alert bg-primary text-white alert-dismissible fade show" role="alert">
+                        {{session('status')}}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span
+                                aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            @endif
             <div class="row card-collapse">
                 @foreach ($comments as $comment)
                 <div class="col-md-6">
@@ -75,6 +87,19 @@
                         <div class="card-header has-arrow">{{$comment->name}}</div>
                         <div class="card-body">
                             <p class="card-text">{{$comment->comment}}.</p>
+                            <p class="card-text"><b>{{$comment->time}}</b></p>
+
+                            @if ($comment->comment_status == 1)
+                                <p class="card-text"><b>Status: Layak</b></p>
+                            @else
+                                <p class="card-text"><b>Status: Belum Layak</b></p>
+                            @endif
+
+                            <form action="/admin/feedback/{{$comment->id_comment}}" method="post" class="d-inline">
+                                @method('patch')
+                                @csrf
+                                <button type="submit" class="btn btn-warning">Filter</button>
+                            </form>
                             <form action="/admin/feedback/{{$comment->id_comment}}" method="post" class="d-inline">
                                 @method('delete')
                                 @csrf
@@ -92,6 +117,19 @@
                         <div class="card-body">
                             <p class="card-text">{{$commentProduct->comment}}.</p>
                             <p class="card-text"><b>Nama Produk: {{$commentProduct->nama}}</b></p>
+                            <p class="card-text"><b>{{$commentProduct->time}}</b></p>
+
+                            @if ($commentProduct->comment_status == 1)
+                                <p class="card-text"><b>Status: Layak</b></p>
+                            @else
+                                <p class="card-text"><b>Status: Belum Layak</b></p>
+                            @endif
+
+                            <form action="/admin/feedback/{{$commentProduct->id_comment}}" method="post" class="d-inline">
+                                @method('patch')
+                                @csrf
+                                <button type="submit" class="btn btn-warning">Filter</button>
+                            </form>
                             <form action="/admin/feedback/{{$commentProduct->id_comment}}" method="post" class="d-inline">
                                 @method('delete')
                                 @csrf

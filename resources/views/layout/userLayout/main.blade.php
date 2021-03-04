@@ -36,9 +36,9 @@
 
     {{-- Aside mobile navbar --}}
     <aside class="andro_aside andro_aside-left">
-      <a href="/" class="navbar-brand">
-        <h2>Coffeez</h2>
-      </a>
+        <a href="/" class="navbar-brand">
+            <h2>Coffeez</h2>
+        </a>
         {{-- <a class="navbar-brand" href="/"> <img src="{{ asset('assets/img/logo.png') }}" alt="logo"> </a> --}}
 
         <ul class="navbar-nav">
@@ -62,10 +62,44 @@
             <div class="container">
                 <div class="andro_header-top-inner">
                     <ul class="andro_header-top-sm andro_sm">
-                        <li> <a href="https://www.facebook.com/" target="_blank"> <i class="fab fa-facebook-f"></i> </a> </li>
-                        <li> <a href="https://www.instagram.com/" target="_blank"> <i class="fab fa-twitter"></i> </a> </li>
-                        <li> <a href="https://www.twitter.com/" target="_blank"> <i class="fab fa-instagram"></i> </a> </li>
+                        <li> <a href="https://www.facebook.com/" target="_blank"> <i class="fab fa-facebook-f"></i> </a>
+                        </li>
+                        <li> <a href="https://www.instagram.com/" target="_blank"> <i class="fab fa-twitter"></i> </a>
+                        </li>
+                        <li> <a href="https://www.twitter.com/" target="_blank"> <i class="fab fa-instagram"></i> </a>
+                        </li>
                     </ul>
+                    @auth
+                    <ul class="andro_header-top-links">
+                        <li class="menu-item menu-item-has-children">
+                            <a href="#"> <span class="andro_current-currency-text">{{ Auth::user()->name }}</span></a>
+                            <ul class="sub-menu sub-menu-left">
+                                <li>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+
+                                        <x-jet-dropdown-link href="{{ route('logout') }}" onclick="event.preventDefault();
+                                            this.closest('form').submit();">
+                                            {{ __('Logout') }}
+                                        </x-jet-dropdown-link>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    @endauth
+                    @guest
+                    <ul class="andro_header-top-links">
+                      <li class="menu-item menu-item-has-children">
+                          <a href="{{ route('register') }}"> <span class="andro_current-currency-text">Register</span></a>
+                      </li>
+                      <li class="menu-item menu-item-has-children">
+                        <a href="{{ route('login') }}"> <span class="andro_current-currency-text">Login</span></a>
+                      </li>
+                  </ul>
+                    @endguest
+
+
                 </div>
             </div>
         </div>
@@ -77,9 +111,10 @@
                 <nav class="navbar">
                     <!-- Logo -->
                     <a href="/" class="navbar-brand">
-                      <h2>Coffeed</h2>
+                        <h2>Coffeed</h2>
                     </a>
-                    {{-- <a class="navbar-brand" href="/"> <img src="{{ asset('assets/img/logo.png') }}" alt="logo"> </a> --}}
+                    {{-- <a class="navbar-brand" href="/"> <img src="{{ asset('assets/img/logo.png') }}" alt="logo">
+                    </a> --}}
 
                     <!-- Menu -->
                     <ul class="navbar-nav">
@@ -95,11 +130,12 @@
                     <div class="andro_header-controls">
 
                         <div class="andro_search-adv-input">
-                          <form action="/products/search" method="GET" >
-                            <input type="text" class="form-control" placeholder="Look for Mocha, Robusta Roasted" name="search" value="">
-                            <button type="submit"><i class="fa fa-search"></i></button>
-                          </form>
-                          </div>
+                            <form action="/products/search" method="GET">
+                                <input type="text" class="form-control" placeholder="Look for Mocha, Robusta Roasted"
+                                    name="search" value="">
+                                <button type="submit"><i class="fa fa-search"></i></button>
+                            </form>
+                        </div>
 
                         <!-- Toggler -->
                         <div class="aside-toggler aside-trigger-left">
@@ -147,48 +183,51 @@
     <footer class="andro_footer andro_footer-dark">
         <!-- Top Footer -->
         <div class="container">
-          <div class="andro_footer-top">
-            <div class="andro_footer-logo">
-              <img src="{{ asset('assets/img/clients/6.png') }}" alt="logo">
+            <div class="andro_footer-top">
+                <div class="andro_footer-logo">
+                    <img src="{{ asset('assets/img/clients/6.png') }}" alt="logo">
+                </div>
             </div>
-          </div>
         </div>
-    
+
         <!-- Middle Footer -->
         <div class="andro_footer-middle">
-          <div class="container">
-            <div class="row">
-              <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12 footer-widget">
-                <h5 class="widget-title">Information</h5>
-                <ul>
-                  <li> <a href="/">Home</a> </li>
-                  <li> <a href="/aboutus">About Us</a> </li>
-                  <li> <a href="/contactus">Contact Us</a> </li>
-                </ul>
-              </div>
-              <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 footer-widget">
-                <h5 class="widget-title">Social Media</h5>
-                <ul class="social-media">
-                  <li> <a href="https://www.facebook.com/" target="_blank" class="facebook"> <i class="fab fa-facebook-f"></i> </a> </li>
-                  <li> <a href="https://www.instagram.com/" target="_blank" class="instagram"> <i class="fab fa-instagram"></i> </a> </li>
-                  <li> <a href="https://www.twitter.com/" target="_blank" class="twitter"> <i class="fab fa-twitter"></i> </a> </li>
-                </ul>
-              </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12 footer-widget">
+                        <h5 class="widget-title">Information</h5>
+                        <ul>
+                            <li> <a href="/">Home</a> </li>
+                            <li> <a href="/aboutus">About Us</a> </li>
+                            <li> <a href="/contactus">Contact Us</a> </li>
+                        </ul>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 footer-widget">
+                        <h5 class="widget-title">Social Media</h5>
+                        <ul class="social-media">
+                            <li> <a href="https://www.facebook.com/" target="_blank" class="facebook"> <i
+                                        class="fab fa-facebook-f"></i> </a> </li>
+                            <li> <a href="https://www.instagram.com/" target="_blank" class="instagram"> <i
+                                        class="fab fa-instagram"></i> </a> </li>
+                            <li> <a href="https://www.twitter.com/" target="_blank" class="twitter"> <i
+                                        class="fab fa-twitter"></i> </a> </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-    
+
         <!-- Footer Bottom -->
         <div class="andro_footer-bottom">
-          <div class="container">
-            <div class="andro_footer-copyright">
-              <p> Copyright © 2020 <a href="#">SchevaPratama</a> All Rights Reserved. </p>
-              <a href="#" class="andro_back-to-top">Back to top <i class="fas fa-chevron-up"></i> </a>
+            <div class="container">
+                <div class="andro_footer-copyright">
+                    <p> Copyright © 2020 <a href="#">SchevaPratama</a> All Rights Reserved. </p>
+                    <a href="#" class="andro_back-to-top">Back to top <i class="fas fa-chevron-up"></i> </a>
+                </div>
             </div>
-          </div>
         </div>
-    
-      </footer>
+
+    </footer>
     <!-- Footer End -->
 
 

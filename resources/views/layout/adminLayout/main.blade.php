@@ -82,6 +82,13 @@
                         <div class="menu-title">Feedback</div>
                     </a>
                 </li>
+                <li>
+                    <a href="/users">
+                        <div class="parent-icon icon-color-8"><i class="bx bx-user"></i>
+                        </div>
+                        <div class="menu-title">User</div>
+                    </a>
+                </li>
             </ul>
             <!--end navigation-->
         </div>

@@ -15,7 +15,7 @@
                     <div class="card radius-15">
                         <div class="card-body">
                             <h5 class="card-title">{{$product->nama}}</h5>
-                            <h6 class="card-subtitle mb-2">{{$product->harga}}</h6>
+                            <h6 class="card-subtitle mb-2">Rp.{{$product->harga}}</h6>
                             <p class="text-justify">{{$product->deskripsi}}</p> 
                         </div>
                         <ul class="list-group list-group-flush">
